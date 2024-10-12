@@ -14,9 +14,15 @@ class QuoteProvider with ChangeNotifier {
 
   Future fetchQuote(String category) async {
     try {
-      _quote = await _apiService.fetchRandomQuote(category);
+      Quote newQuote = await _apiService.fetchRandomQuote(category);
+      // Only update and toggle the theme if the quote changes
+      if (_quote == null || _quote!.quote != newQuote.quote) {
+        _quote = newQuote;
+        toggleTheme();
+      }
       notifyListeners();
     } catch (error) {
+      // If there's an error, do not change the theme
       _quote = null;
       notifyListeners();
     }
@@ -49,6 +55,7 @@ class QuoteProvider with ChangeNotifier {
   Color get backgroundColor => _backgroundColor;
   Color get textColor => _textColor;
 
+  // Toggle theme between black and white
   void toggleTheme() {
     if (_backgroundColor == Colors.black) {
       _backgroundColor = Colors.white;

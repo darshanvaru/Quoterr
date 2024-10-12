@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:quoterr/providers/quote_provider.dart';
-import 'package:share_plus/share_plus.dart'; // Import the Share package
-import 'bookmarked_quotes_screen.dart'; // Import your Bookmark screen here
+import 'package:share_plus/share_plus.dart';
 
 class QuoteScreen extends StatefulWidget {
   const QuoteScreen({super.key});
@@ -31,8 +30,6 @@ class QuoteScreenState extends State<QuoteScreen> {
   ];
 
   String selectedCategory = 'Life';
-  Color backgroundColor = Colors.black;
-  Color textColor = Colors.white;
   bool _isLoading = true;
 
   @override
@@ -46,14 +43,9 @@ class QuoteScreenState extends State<QuoteScreen> {
       _isLoading = true;
     });
 
-    Provider.of<QuoteProvider>(context, listen: false).toggleTheme();
-    Provider.of<QuoteProvider>(context, listen: false).fetchQuote(selectedCategory);
-
-    // Waiting till the quote is fetched so Bg changes at perfect sync
     await Provider.of<QuoteProvider>(context, listen: false).fetchQuote(selectedCategory);
+
     setState(() {
-      backgroundColor = (backgroundColor == Colors.white) ? Colors.black : Colors.white;
-      textColor = (textColor == Colors.black) ? Colors.white : Colors.black;
       _isLoading = false;
     });
   }
@@ -63,10 +55,10 @@ class QuoteScreenState extends State<QuoteScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text('Select a Category'),
+          title: const Text('Select desired Category'),
           content: SizedBox(
             width: double.maxFinite,
-            height: 300, // Adjust height for more items
+            height: 300,
             child: ListView(
               children: categories.map((category) {
                 return ListTile(
@@ -84,9 +76,9 @@ class QuoteScreenState extends State<QuoteScreen> {
 
     if (newCategory != null) {
       setState(() {
-        selectedCategory = newCategory; // Update selected category
+        selectedCategory = newCategory;
       });
-      _fetchQuote(); // Fetch new quote for selected category
+      _fetchQuote();
     }
   }
 
@@ -103,7 +95,7 @@ class QuoteScreenState extends State<QuoteScreen> {
   void _shareQuote() {
     final quoteProvider = Provider.of<QuoteProvider>(context, listen: false);
     if (quoteProvider.quote != null) {
-      Share.share('${quoteProvider.quote!.quote} - ${quoteProvider.quote!.author}');
+      Share.share('${quoteProvider.quote!.quote} \n- ${quoteProvider.quote!.author}');
     }
   }
 
@@ -111,6 +103,8 @@ class QuoteScreenState extends State<QuoteScreen> {
   Widget build(BuildContext context) {
     final quoteProvider = Provider.of<QuoteProvider>(context);
     final quote = quoteProvider.quote;
+    final backgroundColor = quoteProvider.backgroundColor;
+    final textColor = quoteProvider.textColor;
 
     return Scaffold(
       backgroundColor: backgroundColor,
@@ -119,8 +113,8 @@ class QuoteScreenState extends State<QuoteScreen> {
           padding: EdgeInsets.only(top: 35.0, bottom: 15),
           child: Text('Quoter', style: TextStyle(fontSize: 30)),
         ),
-        backgroundColor: backgroundColor == Colors.black ? Colors.black : Colors.white,
-        foregroundColor: backgroundColor == Colors.black ? Colors.white : Colors.black,
+        backgroundColor: backgroundColor,
+        foregroundColor: textColor,
       ),
       body: Center(
         child: _isLoading
@@ -174,7 +168,10 @@ class QuoteScreenState extends State<QuoteScreen> {
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(selectedCategory, style: TextStyle(fontSize: 20, color: textColor),),
+              Text(
+                selectedCategory,
+                style: TextStyle(fontSize: 20, color: textColor),
+              ),
               const SizedBox(width: 8),
               FloatingActionButton(
                 onPressed: _changeCategoryDialogBox,
@@ -185,27 +182,6 @@ class QuoteScreenState extends State<QuoteScreen> {
         ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 0,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.bookmark),
-            label: 'Bookmarks',
-          ),
-        ],
-        onTap: (index) {
-          if (index == 1) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => const BookmarkedQuotesScreen()),
-            );
-          }
-        },
-      ),
     );
   }
 }

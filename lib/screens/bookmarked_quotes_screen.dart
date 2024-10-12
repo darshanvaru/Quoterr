@@ -36,7 +36,7 @@ class BookmarkedQuotesScreenState extends State<BookmarkedQuotesScreen> {
           ? Center(
         child: Text(
           "No Quotes Bookmarked yet!",
-          style: TextStyle(color: Theme.of(context).primaryColor), // Use the theme color for better integration
+          style: TextStyle(color: Theme.of(context).primaryColor),
         ),
       )
           : ListView.builder(
@@ -46,32 +46,31 @@ class BookmarkedQuotesScreenState extends State<BookmarkedQuotesScreen> {
           return _buildQuoteCard(quote, quoteProvider);
         },
       ),
-      bottomNavigationBar: _buildBottomNavigationBar(),
     );
   }
 
   Widget _buildQuoteCard(Quote quote, QuoteProvider quoteProvider) {
     return Card(
-      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16), // Adds spacing around each card
-      elevation: 4, // Adds shadow for a lifted appearance
+      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      elevation: 4,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10), // Rounded corners
+        borderRadius: BorderRadius.circular(10),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(16), // Inner padding for the card
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               quote.quote,
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold), // Bold quote text
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 8), // Spacing between quote and author
+            const SizedBox(height: 8),
             Text(
               '- ${quote.author}',
-              style: const TextStyle(fontSize: 16, color: Colors.grey), // Gray author text
+              style: const TextStyle(fontSize: 16, color: Colors.grey),
             ),
-            const SizedBox(height: 8), // Spacing before buttons
+            const SizedBox(height: 8),
             _buildQuoteActions(quote, quoteProvider),
           ],
         ),
@@ -87,7 +86,7 @@ class BookmarkedQuotesScreenState extends State<BookmarkedQuotesScreen> {
           icon: const Icon(Icons.share, color: Colors.blue),
           onPressed: () {
             // Share the quote and author
-            Share.share('${quote.quote} - ${quote.author}');
+            Share.share('${quote.quote} \n- ${quote.author}');
           },
         ),
         IconButton(
@@ -121,30 +120,6 @@ class BookmarkedQuotesScreenState extends State<BookmarkedQuotesScreen> {
           ),
         ],
       ),
-    );
-  }
-
-  BottomNavigationBar _buildBottomNavigationBar() {
-    return BottomNavigationBar(
-      currentIndex: currentIndex, // Highlight the current index
-      items: const [
-        BottomNavigationBarItem(
-          icon: Icon(Icons.home),
-          label: 'Home',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.bookmark),
-          label: 'Bookmarks',
-        ),
-      ],
-      onTap: (index) {
-        if (index == 0) {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const QuoteScreen()), // Navigate to QuoteScreen
-          );
-        }
-      },
     );
   }
 }
