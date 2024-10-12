@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:quoterr/screens/home_screen.dart';
 import 'providers/quote_provider.dart';
 import 'screens/quote_screen.dart';
 
@@ -20,7 +21,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: const QuoteScreen(),
+        home: const HomeScreen(),
       ),
     );
   }
