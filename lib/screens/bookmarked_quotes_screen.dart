@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:quoterr/providers/quote_provider.dart';
 import 'package:share_plus/share_plus.dart'; // Import the Share package
 import '../models/quote.dart';
-import 'quote_screen.dart'; // Import your QuoteScreen here
 
 class BookmarkedQuotesScreen extends StatefulWidget {
   const BookmarkedQuotesScreen({super.key});

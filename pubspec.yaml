@@ -13,7 +13,8 @@ dependencies:
   dio: ^5.0.2
   provider: ^6.0.4
   http: ^0.13.3
-  sqflite: ^2.0.0
+  sqflite: ^2.0.0+4 # Use the appropriate version
+  path: ^1.8.0 # Add this line for the path package
   share_plus: ^10.0.3
 
 dev_dependencies:
