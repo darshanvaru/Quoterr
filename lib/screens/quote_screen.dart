@@ -1,7 +1,7 @@
-// lib/screens/quote_screen.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:quoterr/providers/quote_provider.dart';
+import 'package:share_plus/share_plus.dart'; // Import the Share package
 import 'bookmarked_quotes_screen.dart'; // Import your Bookmark screen here
 
 class QuoteScreen extends StatefulWidget {
@@ -13,30 +13,24 @@ class QuoteScreen extends StatefulWidget {
 
 class QuoteScreenState extends State<QuoteScreen> {
   List<String> categories = [
-    'random',
-    'happiness',
-    'love',
-    'success',
-    'life',
-    'inspirational',
-    'alone',
-    'attitude',
-    'courage',
-    'friendship',
-    'freedom',
-    'fear',
-    'health',
-    'family',
-    'funny',
-    'dreams',
-    'education',
-    'change',
-    'beauty',
-    'art',
-    'government',
+    'Happiness',
+    'Love',
+    'Success',
+    'Life',
+    'Inspirational',
+    'Alone',
+    'Friendship',
+    'Freedom',
+    'Fear',
+    'Family',
+    'Funny',
+    'Dreams',
+    'Education',
+    'Change',
+    'Beauty',
   ];
 
-  String selectedCategory = 'success';
+  String selectedCategory = 'Life';
   Color backgroundColor = Colors.black;
   Color textColor = Colors.white;
   bool _isLoading = true;
@@ -49,25 +43,22 @@ class QuoteScreenState extends State<QuoteScreen> {
 
   void _fetchQuote() async {
     setState(() {
-      _isLoading = true; // Set loading state to true
+      _isLoading = true;
     });
 
     Provider.of<QuoteProvider>(context, listen: false).toggleTheme();
     Provider.of<QuoteProvider>(context, listen: false).fetchQuote(selectedCategory);
 
-    // Fetch the quote
+    // Waiting till the quote is fetched so Bg changes at perfect sync
     await Provider.of<QuoteProvider>(context, listen: false).fetchQuote(selectedCategory);
-
-    // Change the background and text colors after fetching the quote
     setState(() {
       backgroundColor = (backgroundColor == Colors.white) ? Colors.black : Colors.white;
       textColor = (textColor == Colors.black) ? Colors.white : Colors.black;
-      _isLoading = false; // Set loading state to false
+      _isLoading = false;
     });
   }
 
-
-  void _changeCategory() async {
+  void _changeCategoryDialogBox() async {
     final String? newCategory = await showDialog<String>(
       context: context,
       builder: (context) {
@@ -109,7 +100,13 @@ class QuoteScreenState extends State<QuoteScreen> {
     }
   }
 
-  @override
+  void _shareQuote() {
+    final quoteProvider = Provider.of<QuoteProvider>(context, listen: false);
+    if (quoteProvider.quote != null) {
+      Share.share('${quoteProvider.quote!.quote} - ${quoteProvider.quote!.author}');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final quoteProvider = Provider.of<QuoteProvider>(context);
@@ -123,11 +120,11 @@ class QuoteScreenState extends State<QuoteScreen> {
           child: Text('Quoter', style: TextStyle(fontSize: 30)),
         ),
         backgroundColor: backgroundColor == Colors.black ? Colors.black : Colors.white,
-        foregroundColor: backgroundColor == Colors.black ? Colors.white : Colors.black, // Change text color
+        foregroundColor: backgroundColor == Colors.black ? Colors.white : Colors.black,
       ),
       body: Center(
-        child: _isLoading // Check loading state
-            ? const CircularProgressIndicator() // Show loading indicator
+        child: _isLoading
+            ? const CircularProgressIndicator()
             : Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: Column(
@@ -135,7 +132,7 @@ class QuoteScreenState extends State<QuoteScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                quote!.quote, // Ensure quote is not null
+                quote!.quote,
                 style: TextStyle(
                   color: textColor,
                   fontSize: 24,
@@ -160,26 +157,36 @@ class QuoteScreenState extends State<QuoteScreen> {
           ),
         ),
       ),
-
       floatingActionButton: Column(
         mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
+          FloatingActionButton(
+            onPressed: _shareQuote,
+            child: const Icon(Icons.share),
+          ),
+          const SizedBox(height: 10),
           FloatingActionButton(
             onPressed: _fetchQuote,
             child: const Icon(Icons.refresh),
           ),
           const SizedBox(height: 10),
-          FloatingActionButton(
-            onPressed: _changeCategory,
-            child: const Icon(Icons.category),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(selectedCategory, style: TextStyle(fontSize: 20, color: textColor),),
+              const SizedBox(width: 8),
+              FloatingActionButton(
+                onPressed: _changeCategoryDialogBox,
+                child: const Icon(Icons.category),
+              ),
+            ],
           ),
         ],
       ),
-
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: backgroundColor == Colors.black ? Colors.black : Colors.white, // Change navbar color
-        selectedItemColor: backgroundColor == Colors.black ? Colors.white : Colors.black, // Selected item color
-        unselectedItemColor: backgroundColor == Colors.black ? Colors.grey : Colors.black54, // Unselected item color
+        currentIndex: 0,
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -191,15 +198,11 @@ class QuoteScreenState extends State<QuoteScreen> {
           ),
         ],
         onTap: (index) {
-          switch (index) {
-            case 0: // Home
-              break;
-            case 1: // Bookmarks
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => const BookmarkedQuotesScreen()),
-              );
-              break;
+          if (index == 1) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const BookmarkedQuotesScreen()),
+            );
           }
         },
       ),
