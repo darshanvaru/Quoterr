@@ -1,21 +1,27 @@
-// lib/models/quote.dart
-
 class Quote {
-  final String quote;  // Property to hold the quote text
-  final String author; // Property to hold the author's name
+  final String quote;
+  final String author;
 
-  Quote({required this.quote, required this.author}); // Constructor
+  Quote({required this.quote, required this.author});
 
-  // Factory method to create a Quote object from JSON
-  factory Quote.fromJson(Map<String, dynamic> json) {
-    // print('---------------------------------------------------------');
-    // print('quote: ${json['quote']}');
-    // print('author: ${json['author']}');
-    // print('---------------------------------------------------------');
+  Map<String, dynamic> toMap() {
+    return {
+      'quote': quote,
+      'author': author,
+    };
+  }
+
+  factory Quote.fromMap(Map<String, dynamic> map) {
     return Quote(
-      quote: json['quote'],  // Adjust this according to the actual API response key
-      author: json['author'], // Adjust this according to the actual API response key
+      quote: map['quote'],
+      author: map['author'],
     );
+  }
 
+  factory Quote.fromJson(Map<String, dynamic> json) {
+    return Quote(
+      quote: json['quote'],
+      author: json['author'],
+    );
   }
 }
