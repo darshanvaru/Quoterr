@@ -29,7 +29,7 @@ class QuoteScreenState extends State<QuoteScreen> {
     'Beauty',
   ];
 
-  String selectedCategory = 'Life';
+  String selectedCategory = 'success';
   bool _isLoading = true;
 
   @override
@@ -39,6 +39,27 @@ class QuoteScreenState extends State<QuoteScreen> {
   }
 
   void _fetchQuote() async {
+    final quoteProvider = Provider.of<QuoteProvider>(context, listen: false);
+
+    // Only fetch a new quote if it hasn't been loaded
+    if (!quoteProvider.quoteLoaded) {
+      setState(() {
+        _isLoading = true;
+      });
+
+      await quoteProvider.fetchQuote(selectedCategory);
+
+      setState(() {
+        _isLoading = false;
+      });
+    } else {
+      setState(() {
+        _isLoading = false; // If already loaded, stop loading spinner
+      });
+    }
+  }
+
+  void _refreshQuote() async {
     setState(() {
       _isLoading = true;
     });
@@ -78,7 +99,7 @@ class QuoteScreenState extends State<QuoteScreen> {
       setState(() {
         selectedCategory = newCategory;
       });
-      _fetchQuote();
+      _refreshQuote(); // Refresh quote when category is changed
     }
   }
 
@@ -125,23 +146,30 @@ class QuoteScreenState extends State<QuoteScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                quote!.quote,
+              quote != null // Check if quote is not null
+                  ? Text(
+                quote.quote,
                 style: TextStyle(
                   color: textColor,
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
                 ),
+              )
+                  : const Text(
+                'Network Error',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 10),
-              Text(
+              quote != null
+                  ? Text(
                 '- ${quote.author}',
                 style: TextStyle(
                   color: textColor,
                   fontSize: 18,
                   fontStyle: FontStyle.italic,
                 ),
-              ),
+              )
+                  : const SizedBox.shrink(), // Empty space if no quote
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _bookmarkQuote,
@@ -161,7 +189,7 @@ class QuoteScreenState extends State<QuoteScreen> {
           ),
           const SizedBox(height: 10),
           FloatingActionButton(
-            onPressed: _fetchQuote,
+            onPressed: _refreshQuote, // Calls the forced refresh
             child: const Icon(Icons.refresh),
           ),
           const SizedBox(height: 10),

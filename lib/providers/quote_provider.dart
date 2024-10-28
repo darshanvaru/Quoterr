@@ -8,21 +8,22 @@ class QuoteProvider with ChangeNotifier {
   final List<Quote> _bookmarkedQuotes = [];
   final ApiService _apiService = ApiService();
   final DatabaseHelper _databaseHelper = DatabaseHelper();
+  bool _quoteLoaded = false; // Flag to track if a quote has been loaded
 
   Quote? get quote => _quote;
   List<Quote> get bookmarkedQuotes => _bookmarkedQuotes;
+  bool get quoteLoaded => _quoteLoaded; // Expose the flag
 
-  Future fetchQuote(String category) async {
+  Future<void> fetchQuote(String category) async {
     try {
       Quote newQuote = await _apiService.fetchRandomQuote(category);
-      // Only update and toggle the theme if the quote changes
       if (_quote == null || _quote!.quote != newQuote.quote) {
         _quote = newQuote;
+        _quoteLoaded = true; // Set flag to true after loading
         toggleTheme();
       }
       notifyListeners();
     } catch (error) {
-      // If there's an error, do not change the theme
       _quote = null;
       notifyListeners();
     }
