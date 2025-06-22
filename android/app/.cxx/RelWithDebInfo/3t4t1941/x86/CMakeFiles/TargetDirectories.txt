@@ -1,0 +1,2 @@
+D:/Projects/CodSoft/Task 2 - Quote App/quoterr/android/app/.cxx/RelWithDebInfo/3t4t1941/x86/CMakeFiles/edit_cache.dir
+D:/Projects/CodSoft/Task 2 - Quote App/quoterr/android/app/.cxx/RelWithDebInfo/3t4t1941/x86/CMakeFiles/rebuild_cache.dir

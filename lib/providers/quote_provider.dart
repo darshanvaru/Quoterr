@@ -12,14 +12,14 @@ class QuoteProvider with ChangeNotifier {
 
   Quote? get quote => _quote;
   List<Quote> get bookmarkedQuotes => _bookmarkedQuotes;
-  bool get quoteLoaded => _quoteLoaded; // Expose the flag
+  bool get quoteLoaded => _quoteLoaded;
 
-  Future<void> fetchQuote(String category) async {
+  Future<void> fetchQuote() async {
     try {
-      Quote newQuote = await _apiService.fetchRandomQuote(category);
+      Quote newQuote = await _apiService.fetchRandomQuote();
       if (_quote == null || _quote!.quote != newQuote.quote) {
         _quote = newQuote;
-        _quoteLoaded = true; // Set flag to true after loading
+        _quoteLoaded = true;
         toggleTheme();
       }
       notifyListeners();

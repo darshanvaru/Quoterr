@@ -11,25 +11,24 @@ class QuoteScreen extends StatefulWidget {
 }
 
 class QuoteScreenState extends State<QuoteScreen> {
-  List<String> categories = [
-    'Happiness',
-    'Love',
-    'Success',
-    'Life',
-    'Inspirational',
-    'Alone',
-    'Friendship',
-    'Freedom',
-    'Fear',
-    'Family',
-    'Funny',
-    'Dreams',
-    'Education',
-    'Change',
-    'Beauty',
-  ];
-
-  String selectedCategory = 'success';
+  // List<String> categories = [
+  //   'Happiness',
+  //   'Love',
+  //   'Success',
+  //   'Life',
+  //   'Inspirational',
+  //   'Alone',
+  //   'Friendship',
+  //   'Freedom',
+  //   'Fear',
+  //   'Family',
+  //   'Funny',
+  //   'Dreams',
+  //   'Education',
+  //   'Change',
+  //   'Beauty',
+  // ];
+  // String selectedCategory = 'success';
   bool _isLoading = true;
 
   @override
@@ -47,7 +46,8 @@ class QuoteScreenState extends State<QuoteScreen> {
         _isLoading = true;
       });
 
-      await quoteProvider.fetchQuote(selectedCategory);
+      await quoteProvider.fetchQuote();
+      // await quoteProvider.fetchQuote(selectedCategory);
 
       setState(() {
         _isLoading = false;
@@ -64,44 +64,45 @@ class QuoteScreenState extends State<QuoteScreen> {
       _isLoading = true;
     });
 
-    await Provider.of<QuoteProvider>(context, listen: false).fetchQuote(selectedCategory);
+    await Provider.of<QuoteProvider>(context, listen: false).fetchQuote();
+    // await Provider.of<QuoteProvider>(context, listen: false).fetchQuote(selectedCategory);
 
     setState(() {
       _isLoading = false;
     });
   }
 
-  void _changeCategoryDialogBox() async {
-    final String? newCategory = await showDialog<String>(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Select desired Category'),
-          content: SizedBox(
-            width: double.maxFinite,
-            height: 300,
-            child: ListView(
-              children: categories.map((category) {
-                return ListTile(
-                  title: Text(category),
-                  onTap: () {
-                    Navigator.of(context).pop(category);
-                  },
-                );
-              }).toList(),
-            ),
-          ),
-        );
-      },
-    );
-
-    if (newCategory != null) {
-      setState(() {
-        selectedCategory = newCategory;
-      });
-      _refreshQuote(); // Refresh quote when category is changed
-    }
-  }
+  // void _changeCategoryDialogBox() async {
+  //   final String? newCategory = await showDialog<String>(
+  //     context: context,
+  //     builder: (context) {
+  //       return AlertDialog(
+  //         title: const Text('Select desired Category'),
+  //         content: SizedBox(
+  //           width: double.maxFinite,
+  //           height: 300,
+  //           child: ListView(
+  //             children: categories.map((category) {
+  //               return ListTile(
+  //                 title: Text(category),
+  //                 onTap: () {
+  //                   Navigator.of(context).pop(category);
+  //                 },
+  //               );
+  //             }).toList(),
+  //           ),
+  //         ),
+  //       );
+  //     },
+  //   );
+  //
+  //   if (newCategory != null) {
+  //     setState(() {
+  //       selectedCategory = newCategory;
+  //     });
+  //     _refreshQuote(); // Refresh quote when category is changed
+  //   }
+  // }
 
   void _bookmarkQuote() {
     final quoteProvider = Provider.of<QuoteProvider>(context, listen: false);
@@ -155,9 +156,9 @@ class QuoteScreenState extends State<QuoteScreen> {
                   fontWeight: FontWeight.bold,
                 ),
               )
-                  : const Text(
-                'Network Error',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  : Text(
+                'Network Error!',
+                style: TextStyle(color: textColor, fontSize: 24, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 10),
               quote != null
@@ -193,20 +194,20 @@ class QuoteScreenState extends State<QuoteScreen> {
             child: const Icon(Icons.refresh),
           ),
           const SizedBox(height: 10),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                selectedCategory,
-                style: TextStyle(fontSize: 20, color: textColor),
-              ),
-              const SizedBox(width: 8),
-              FloatingActionButton(
-                onPressed: _changeCategoryDialogBox,
-                child: const Icon(Icons.category),
-              ),
-            ],
-          ),
+          // Row(
+          //   mainAxisSize: MainAxisSize.min,
+          //   children: [
+          //     Text(
+          //       selectedCategory,
+          //       style: TextStyle(fontSize: 20, color: textColor),
+          //     ),
+          //     const SizedBox(width: 8),
+          //     FloatingActionButton(
+          //       onPressed: _changeCategoryDialogBox,
+          //       child: const Icon(Icons.category),
+          //     ),
+          //   ],
+          // ),
         ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
