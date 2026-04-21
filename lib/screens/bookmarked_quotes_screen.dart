@@ -12,25 +12,28 @@ class BookmarkedQuotesScreen extends StatefulWidget {
 }
 
 class BookmarkedQuotesScreenState extends State<BookmarkedQuotesScreen> {
-  int currentIndex = 1; // Set current index to 1 for BookmarkedQuotesScreen
+  int currentIndex = 1;
 
   @override
   void initState() {
     super.initState();
-    // Load the bookmarked quotes from the database
     final quoteProvider = Provider.of<QuoteProvider>(context, listen: false);
-    quoteProvider.loadBookmarkedQuotes(); // Load bookmarks when the screen initializes
+    quoteProvider.loadBookmarkedQuotes();
   }
 
   @override
   Widget build(BuildContext context) {
     final quoteProvider = Provider.of<QuoteProvider>(context);
+    final backgroundColor = quoteProvider.backgroundColor;
+    final textColor = quoteProvider.textColor;
     final bookmarkedQuotes = quoteProvider.bookmarkedQuotes;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Bookmarked Quotes'),
+        backgroundColor: backgroundColor,
+        title: Text('Bookmarked Quotes', style: TextStyle(color: textColor),),
       ),
+      backgroundColor: backgroundColor,
       body: bookmarkedQuotes.isEmpty
           ? Center(
         child: Text(
@@ -84,14 +87,12 @@ class BookmarkedQuotesScreenState extends State<BookmarkedQuotesScreen> {
         IconButton(
           icon: const Icon(Icons.share, color: Colors.blue),
           onPressed: () {
-            // Share the quote and author
             Share.share('${quote.quote} \n- ${quote.author}');
           },
         ),
         IconButton(
           icon: const Icon(Icons.delete, color: Colors.red),
           onPressed: () {
-            // Show a confirmation dialog before removing
             _showRemoveBookmarkDialog(quote, quoteProvider);
           },
         ),

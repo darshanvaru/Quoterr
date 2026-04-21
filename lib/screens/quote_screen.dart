@@ -11,24 +11,6 @@ class QuoteScreen extends StatefulWidget {
 }
 
 class QuoteScreenState extends State<QuoteScreen> {
-  // List<String> categories = [
-  //   'Happiness',
-  //   'Love',
-  //   'Success',
-  //   'Life',
-  //   'Inspirational',
-  //   'Alone',
-  //   'Friendship',
-  //   'Freedom',
-  //   'Fear',
-  //   'Family',
-  //   'Funny',
-  //   'Dreams',
-  //   'Education',
-  //   'Change',
-  //   'Beauty',
-  // ];
-  // String selectedCategory = 'success';
   bool _isLoading = true;
 
   @override
@@ -40,21 +22,19 @@ class QuoteScreenState extends State<QuoteScreen> {
   void _fetchQuote() async {
     final quoteProvider = Provider.of<QuoteProvider>(context, listen: false);
 
-    // Only fetch a new quote if it hasn't been loaded
     if (!quoteProvider.quoteLoaded) {
       setState(() {
         _isLoading = true;
       });
 
       await quoteProvider.fetchQuote();
-      // await quoteProvider.fetchQuote(selectedCategory);
 
       setState(() {
         _isLoading = false;
       });
     } else {
       setState(() {
-        _isLoading = false; // If already loaded, stop loading spinner
+        _isLoading = false;
       });
     }
   }
@@ -65,44 +45,11 @@ class QuoteScreenState extends State<QuoteScreen> {
     });
 
     await Provider.of<QuoteProvider>(context, listen: false).fetchQuote();
-    // await Provider.of<QuoteProvider>(context, listen: false).fetchQuote(selectedCategory);
 
     setState(() {
       _isLoading = false;
     });
   }
-
-  // void _changeCategoryDialogBox() async {
-  //   final String? newCategory = await showDialog<String>(
-  //     context: context,
-  //     builder: (context) {
-  //       return AlertDialog(
-  //         title: const Text('Select desired Category'),
-  //         content: SizedBox(
-  //           width: double.maxFinite,
-  //           height: 300,
-  //           child: ListView(
-  //             children: categories.map((category) {
-  //               return ListTile(
-  //                 title: Text(category),
-  //                 onTap: () {
-  //                   Navigator.of(context).pop(category);
-  //                 },
-  //               );
-  //             }).toList(),
-  //           ),
-  //         ),
-  //       );
-  //     },
-  //   );
-  //
-  //   if (newCategory != null) {
-  //     setState(() {
-  //       selectedCategory = newCategory;
-  //     });
-  //     _refreshQuote(); // Refresh quote when category is changed
-  //   }
-  // }
 
   void _bookmarkQuote() {
     final quoteProvider = Provider.of<QuoteProvider>(context, listen: false);
@@ -147,7 +94,7 @@ class QuoteScreenState extends State<QuoteScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              quote != null // Check if quote is not null
+              quote != null
                   ? Text(
                 quote.quote,
                 style: TextStyle(
@@ -156,8 +103,7 @@ class QuoteScreenState extends State<QuoteScreen> {
                   fontWeight: FontWeight.bold,
                 ),
               )
-                  : Text(
-                'Network Error!',
+                  : Text('Network Error!',
                 style: TextStyle(color: textColor, fontSize: 24, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 10),
@@ -170,7 +116,7 @@ class QuoteScreenState extends State<QuoteScreen> {
                   fontStyle: FontStyle.italic,
                 ),
               )
-                  : const SizedBox.shrink(), // Empty space if no quote
+                  : const SizedBox.shrink(),
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _bookmarkQuote,
@@ -190,24 +136,9 @@ class QuoteScreenState extends State<QuoteScreen> {
           ),
           const SizedBox(height: 10),
           FloatingActionButton(
-            onPressed: _refreshQuote, // Calls the forced refresh
+            onPressed: _refreshQuote,
             child: const Icon(Icons.refresh),
           ),
-          const SizedBox(height: 10),
-          // Row(
-          //   mainAxisSize: MainAxisSize.min,
-          //   children: [
-          //     Text(
-          //       selectedCategory,
-          //       style: TextStyle(fontSize: 20, color: textColor),
-          //     ),
-          //     const SizedBox(width: 8),
-          //     FloatingActionButton(
-          //       onPressed: _changeCategoryDialogBox,
-          //       child: const Icon(Icons.category),
-          //     ),
-          //   ],
-          // ),
         ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,

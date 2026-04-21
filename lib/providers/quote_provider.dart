@@ -8,7 +8,7 @@ class QuoteProvider with ChangeNotifier {
   final List<Quote> _bookmarkedQuotes = [];
   final ApiService _apiService = ApiService();
   final DatabaseHelper _databaseHelper = DatabaseHelper();
-  bool _quoteLoaded = false; // Flag to track if a quote has been loaded
+  bool _quoteLoaded = false;
 
   Quote? get quote => _quote;
   List<Quote> get bookmarkedQuotes => _bookmarkedQuotes;
